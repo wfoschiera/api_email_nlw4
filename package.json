@@ -1,0 +1,18 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "wfoschiera <wfoschiera@gmail.com>",
+  "license": "MIT",
+  "scripts":{
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "github:types/express",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "^4.1.5"
+  }
+}
