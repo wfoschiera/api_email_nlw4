@@ -12,8 +12,19 @@ const app = express();
 
 //  http://localhost:3333/users
 
-app.get("/users", (request, response) => {
-    return response.send("Hello World - NLW04!")
+app.get("/", (request, response) => {
+
+    // return response.send("Hello World - NLW04!")
+    return response.json({ message: "Hello World - NLW04!" })
 })
 
- app.listen(3333, () => console.log("Server is running!"))
+// 1 param => Rota(recurso API)
+// 2 param => request, response
+
+app.post("/", (request, response) => {
+    // simulando que recebemos dados para serem salvos
+    return response.json({message: "Os dados foram salvos com sucesso!"})
+})
+
+
+app.listen(3333, () => console.log("Server is running!"))
