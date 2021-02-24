@@ -79,7 +79,7 @@ No arquivo `package.json` incluir o seguinte código dentro de `"scripts"`:
 Para testar se está funcionando, no terminal, executar `yarn typeorm`
 
 ### 4.3 Ajustes e organização do projeto
-Por padrão, o Typeorm salva as migrations na raiz do projeto, se quiser testar, no Terminal: `yarn typeorm migration:create -n CreateUsers`. Se testou, basta excluir essa migration da raiz.
+Por padrão, o Typeorm salva as _migrations_  na raiz do projeto, se quiser testar, no Terminal: `yarn typeorm migration:create -n CreateUsers`. Se testou, basta excluir essa _migration_da raiz.
 Agora, para configurar um local apropriado, criar a pasta (`/src/database/migrations`) para salvar as _migrations_. Configurar o arquivo `ormconfig.js`, o arquivo ficará assim:
 ```json
 {
@@ -107,6 +107,7 @@ await queryRunner.createTable(
 ```
 Executar a _migration_ utilizando o comando `yarn typeorm migration:run`. Para verificar se foi instalado com sucesso, utilizar (1) ou (2).
 1. Instalar plugin Sqlite (alexcvzz.vscode-sqlite). Depois ir na aba View > command pallete, buscar por SQLITE e ir em open DataBase. Essa opção não funcionou para mim.
+
 1. Instalar o beekeeper, no terminal:
 ```sh
 # Install our GPG key
@@ -120,16 +121,16 @@ sudo apt update
 sudo apt install beekeeper-studio
 ```
 
-As migrations não funcionaram, pois o caminho das migrations não estava setado no `ormconfig.json`. Incluir a seguinte linha:
+As _migrations_ não funcionaram, pois o caminho das _migrations_ não estava setado no `ormconfig.json`. Incluir a seguinte linha:
 ```json
 "migrations": ["./src/database/migrations/**.ts"], //precisa ser array
 ```
 
-Depois, rodar a _migration_ novamente. Ainda, encontrei o seguinte erro:
+Depois, rodar a _migration_ `yarn typeorm migration:run` novamente. Ainda, encontrei o seguinte erro:
 ```sh
 error TS2705: An async function or method in ES5/ES3 requires the 'Promise' constructor.  Make sure you have a declaration for the 'Promise' constructor or include 'ES2015' in your `--lib` option.
 ```
-Para corrigir, inclui o seguinte código no arquivo `tsconfig.json`:
+Para corrigir, incluí o seguinte código no arquivo `tsconfig.json`:
 ```json
 {
   "compilerOptions": {
@@ -139,5 +140,43 @@ Para corrigir, inclui o seguinte código no arquivo `tsconfig.json`:
 ```
 Por fim, fiz a configuração da conexão do DB com o BeeKeeper e confirmei que a _migration_ da tabela Users funcionou.
 
-Continuar aula daqui (36:16)
-https://www.youtube.com/watch?v=8ogZq7YHB7A&feature=emb_title
+Para reverter as migrações:
+```sh
+yarn typeorm migrations:revert
+```
+Obs: Ao executar o comando acima, apenas a última _migration_ será desfeita
+
+## 5. Estrutura para cadastro dos usuários
+### 5.1 Controllers
+__controllers__ — functions that separate out the code to route requests from the code that actually processes requests [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/routes). E com mais detalhes [neste tópico](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/routes#create_the_route-handler_callback_functions).
+
+Neste tópico da aula criamos a pasta `./src/controllers/` e o arquivo `UserControllers.ts`. Não cabe copiar todo o código aqui, comentários foram inseridos no próprio código para facilitar o entendimento.
+
+Depois, criamos o arquivo `routes.ts`, responsável por fazer o "link" entre o controller e as requisições. Agora, infomar ao `server.ts
+
+### 5.2 Gravando as informações no BD
+O ORM é responsável por pegar os dados de uma classe, as `migrations`, e transformá-los em uma tabela no BD. Para estruturar melhor o projeto, foi criada a pasta `./src/models` e dentro, o arquivo `User.ts`.
+
+São feitas algumas alterações no arquivo `tsconfig.json`, de forma a habilitar os decoratos. São elas:
+```json
+"checkJs": true,    
+"strictPropertyInitialization": false,  
+"experimentalDecorators": true,     
+"emitDecoratorMetadata": true,  
+```
+Uma dica importante é sobre a criação do UUID. Alguns BDs possuem algum problema na geração desses UUID. Assim, é possível delegar essa responsabilidade para o Framework. 
+Instalar:
+```sh
+yarn add uuid
+yarn add @types/uuid -D
+``` 
+Dentro da propria classe _User_, definimos um _constructor_ para criar o _ID_ na criação do usuário. Um _if_ foi inserido para verificar se já existe um _ID_.
+
+Por fim, foi criado um _usersRepository_ no _userController_. Essa classe traz vários métodos já implementados para consultas no BD.
+Depois, mapear as _entitites_ no `ormconfig.json`.
+
+Se agora colocar o servidor no ar, será possível enviar um dado via `insominia` usando o POST e vê-lo salvo no BD.
+
+Ainda, é possível acompanhar a execução do SQL pelo ORM. Para isso, incluir no `ormconfig.json` a linha abaixo:
+```json
+"logging": true,```.
