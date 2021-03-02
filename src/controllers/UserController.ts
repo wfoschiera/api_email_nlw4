@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
-import { getRepository, SimpleConsoleLogger } from "typeorm";
+import { getCustomRepository, getRepository, SimpleConsoleLogger } from "typeorm";
 import { User } from "../models/User";
+import { UsersRepository } from "../repositories/UsersRepository";
 
 class UserController {
     // nossa classe não herdou de nenhum lugar o req/resp, por isso precisamos importar
@@ -10,7 +11,7 @@ class UserController {
         
         const { name, email } = request.body;
 
-        const usersRepository = getRepository(User);
+        const usersRepository = getCustomRepository(UsersRepository);
 
         const userAlreadyExists = await usersRepository.findOne({
             email
