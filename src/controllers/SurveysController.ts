@@ -12,11 +12,11 @@ class SurveysController {
         const survey = surveysRepository.create({
             title,
             description
-        });
+        }); 
 
         await surveysRepository.save(survey);
 
-        return response.status(201)
+        return response.status(201).json(survey);
     }
 }
 
