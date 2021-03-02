@@ -1,6 +1,5 @@
-import {Request, Response} from "express";
-import { getCustomRepository, getRepository, SimpleConsoleLogger } from "typeorm";
-import { User } from "../models/User";
+import { Request, Response } from "express";
+import { getCustomRepository } from "typeorm";
 import { UsersRepository } from "../repositories/UsersRepository";
 
 class UserController {
@@ -29,10 +28,10 @@ class UserController {
         });
 
         await usersRepository.save(user);
-
+ 
         // console.log(body)
         return response.json(user);
     }
 }
 
-export { UserController }
+export { UserController };
