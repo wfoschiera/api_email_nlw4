@@ -11,7 +11,7 @@ describe("Surveys", () =>  {
     });
 
     it("Should be able to create a new survey", async () => {
-        const response = await request(app).post("/users").send({
+        const response = await request(app).post("/surveys").send({
             title: "Title example",
             description: "Description example",
         });
@@ -20,12 +20,14 @@ describe("Surveys", () =>  {
         expect(response.body).toHaveProperty("id");
     });
 
-    it("Should be able to get all surveys", () => {
+    it("Should be able to get all surveys", async () => {
         await request(app).post("/surveys").send({
             title: "Title example2",
             description: "Description Example2",
         });
 
-        const(response.body.lenght).toBe(2);
+        const response = await request(app).get("/surveys");
+
+        expect(response.body.length).toBe(2);
     })
 });

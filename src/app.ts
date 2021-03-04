@@ -1,9 +1,7 @@
-import 'reflect-metadata'
-// import express from 'express';
 import express from 'express';
+import 'reflect-metadata';
 import createConnection from "./database";
 import { router } from './routes';
-
 
 createConnection();
 const app = express();
@@ -18,7 +16,8 @@ const app = express();
 
 //  http://localhost:3333/users
 
+// app.use(express.json({type: '*/*'}));
 app.use(express.json());
 app.use( router );
 
-export{ app };
+export { app };
