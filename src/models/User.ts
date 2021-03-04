@@ -4,7 +4,7 @@ import { v4 as uuid} from 'uuid'
 @Entity("users")
 class User {
     
-    // no TS o ID terá tipo String e não uuid
+    // no TS o ID tera tipo String e não uuid
     @PrimaryColumn()
     readonly id: string;
 

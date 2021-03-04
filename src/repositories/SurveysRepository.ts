@@ -5,5 +5,4 @@ import { Survey } from "../models/Survey";
 class SurveysRepository extends Repository<Survey> {}
 
 
-
 export { SurveysRepository }
