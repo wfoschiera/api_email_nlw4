@@ -7,7 +7,6 @@ const router = Router();
 
 const userController = new UserController();
 const surveyController = new SurveysController();
-
 const sendMailController = new SendMailController();
 
 // aqui a magica acontece. Liguei o metodo POST do caminho 
@@ -19,5 +18,6 @@ router.post("/surveys", surveyController.create);
 router.get("/surveys", surveyController.show);
 
 router.post("/sendMail", sendMailController.execute);
+router.get("/sendMail", sendMailController.show);
 
 export { router };
