@@ -34,7 +34,7 @@ class SendMailService {
             name: variables["name"],
             title: variables["title"],
             description: variables["description"],
-            user_id: variables["user_id"],
+            id: variables["id"],
             link: variables["link"]
         })
 

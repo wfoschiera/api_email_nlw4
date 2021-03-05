@@ -1,7 +1,7 @@
-import { nodemailer } from 'nodemailer';
-import {Request, Response } from "express";
+import { Request, Response } from "express";
 import { resolve } from "path";
 import { getCustomRepository } from 'typeorm';
+import { AppError } from "../errors/AppErrors";
 import { SurveysRepository } from '../repositories/SurveysRepository';
 import { SurveysUsersRepository } from '../repositories/SurveysUsersRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
@@ -21,9 +21,10 @@ class SendMailController {
 
 
         if (!user) {
-            return response.status(400).json({
-                error: "User does not exists!",
-            });
+            throw new AppError("User does not exists!")
+            // return response.status(400).json({
+            //     error: "User does not exists!",
+            // });
         }
 
         // verificar se a pesquisa existe
@@ -32,14 +33,18 @@ class SendMailController {
         });
         
         if(!survey) {
-            return response.status(400).json({
-                error: "Survey does not exists!",
-            });
+            throw new AppError("Survey does not exists!");
+            // return response.status(400).json({
+            //     error: "Survey does not exists!",
+            // });
         }
 
         // Salvar informacoes na tabela SurveyUser
         const surveyUserExists = await surveysUsersRepository.findOne({
-            where:[{user_id: user.id}, {value: null}],
+            // where com condicao de AND
+            where:{user_id: user.id, value: null},
+            // where com condicao de OR
+            // where:[{user_id: user.id}, {value: null}],
             // criando a relacao um para muitos no Model, e possivel buscar outras relacoes na pesquisa e devolver isso no json
             relations: ["user", "survey"],
         })
@@ -48,7 +53,7 @@ class SendMailController {
             name: user.name,
             title: survey.title,
             description: survey.description,
-            user_id: user.id,
+            id: "",
             link: process.env.URL_MAIL
         }
         
@@ -56,6 +61,7 @@ class SendMailController {
         const npsPath = resolve(__dirname, "..", "views", "emails", "npsMail.hbs");
 
         if(surveyUserExists) {
+            variables.id = surveyUserExists.id;
             await SendMailService.execute(email, survey.title, variables, npsPath)
             return response.json(surveyUserExists)
         }
@@ -67,6 +73,7 @@ class SendMailController {
 
         await surveysUsersRepository.save(surveyUser);
         
+        variables.id = surveyUser.id
         // Enviar email para o usuario
         await SendMailService.execute(email, survey.title, variables, npsPath)
 
@@ -83,4 +90,4 @@ class SendMailController {
     }
 }
 
-export { SendMailController }
+export { SendMailController };
