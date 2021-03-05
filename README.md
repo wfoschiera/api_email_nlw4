@@ -10,5 +10,5 @@ Neste bootcamp foram utilizadas as tecnologias abaixo:
 - Yarn 
 - IDE Vscode
 - Framework express
-- Insominia para testes de frontend
+- Insomnia para testes de frontend
 - Beekeeper para visualização dos dados no BD

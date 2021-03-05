@@ -1,6 +1,6 @@
-import {Request, Response} from "express";
-import { getRepository, SimpleConsoleLogger } from "typeorm";
-import { User } from "../models/User";
+import { Request, Response } from "express";
+import { getCustomRepository } from "typeorm";
+import { UsersRepository } from "../repositories/UsersRepository";
 
 class UserController {
     // nossa classe não herdou de nenhum lugar o req/resp, por isso precisamos importar
@@ -10,7 +10,7 @@ class UserController {
         
         const { name, email } = request.body;
 
-        const usersRepository = getRepository(User);
+        const usersRepository = getCustomRepository(UsersRepository);
 
         const userAlreadyExists = await usersRepository.findOne({
             email
@@ -26,12 +26,18 @@ class UserController {
             name, 
             email,
         });
-
         await usersRepository.save(user);
-
+ 
         // console.log(body)
-        return response.json(user);
+        return response.status(201).json(user);
+    }
+    async show(request: Request, response: Response){
+        const usersRepository = getCustomRepository(UsersRepository);
+
+        const all = await usersRepository.find();
+
+        return response.json(all);
     }
 }
 
-export { UserController }
+export { UserController };
