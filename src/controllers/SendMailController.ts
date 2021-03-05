@@ -39,13 +39,21 @@ class SendMailController {
             user_id: userAlreadyExists.id,
             survey_id,
         });
+
         await surveysUsersRepository.save(surveyUser);
         
         // Enviar email para o usuario
         return response.status(201).json(surveyUser);
     }
 
-    
+    async show(request: Request, response: Response) {
+        const surveysUsersRepository = getCustomRepository(SurveysUsersRepository);
+
+        // verificar se o usuario existe antes de enviar email
+        const all = await surveysUsersRepository.find();   
+
+        return response.json(all);
+    }
 }
 
 export { SendMailController }
