@@ -39,7 +39,10 @@ class SendMailController {
 
         // Salvar informacoes na tabela SurveyUser
         const surveyUserExists = await surveysUsersRepository.findOne({
-            where:[{user_id: user.id}, {value: null}],
+            // where com condicao de AND
+            where:{user_id: user.id, value: null},
+            // where com condicao de OR
+            // where:[{user_id: user.id}, {value: null}],
             // criando a relacao um para muitos no Model, e possivel buscar outras relacoes na pesquisa e devolver isso no json
             relations: ["user", "survey"],
         })
@@ -48,7 +51,7 @@ class SendMailController {
             name: user.name,
             title: survey.title,
             description: survey.description,
-            user_id: user.id,
+            id: "",
             link: process.env.URL_MAIL
         }
         
@@ -56,6 +59,7 @@ class SendMailController {
         const npsPath = resolve(__dirname, "..", "views", "emails", "npsMail.hbs");
 
         if(surveyUserExists) {
+            variables.id = surveyUserExists.id;
             await SendMailService.execute(email, survey.title, variables, npsPath)
             return response.json(surveyUserExists)
         }
@@ -67,6 +71,7 @@ class SendMailController {
 
         await surveysUsersRepository.save(surveyUser);
         
+        variables.id = surveyUser.id
         // Enviar email para o usuario
         await SendMailService.execute(email, survey.title, variables, npsPath)
 
