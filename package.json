@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
     "typeorm": "ts-node-dev node_modules/typeorm/cli.js",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest -i"
   },
   "dependencies": {
     "@types/node": "^14.14.31",
