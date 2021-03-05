@@ -1,7 +1,7 @@
-import { nodemailer } from 'nodemailer';
-import {Request, Response } from "express";
+import { Request, Response } from "express";
 import { resolve } from "path";
 import { getCustomRepository } from 'typeorm';
+import { AppError } from "../errors/AppErrors";
 import { SurveysRepository } from '../repositories/SurveysRepository';
 import { SurveysUsersRepository } from '../repositories/SurveysUsersRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
@@ -21,9 +21,10 @@ class SendMailController {
 
 
         if (!user) {
-            return response.status(400).json({
-                error: "User does not exists!",
-            });
+            throw new AppError("User does not exists!")
+            // return response.status(400).json({
+            //     error: "User does not exists!",
+            // });
         }
 
         // verificar se a pesquisa existe
@@ -32,9 +33,10 @@ class SendMailController {
         });
         
         if(!survey) {
-            return response.status(400).json({
-                error: "Survey does not exists!",
-            });
+            throw new AppError("Survey does not exists!");
+            // return response.status(400).json({
+            //     error: "Survey does not exists!",
+            // });
         }
 
         // Salvar informacoes na tabela SurveyUser
@@ -88,4 +90,4 @@ class SendMailController {
     }
 }
 
-export { SendMailController }
+export { SendMailController };
