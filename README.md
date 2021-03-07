@@ -13,5 +13,9 @@ Apresentação da __NLW#4__ da rocketseat sobre backend com Node.js
 - Beekeeper para visualização dos dados no BD
 - Varias bibliotecas para desenvolvimento, incluindo testes e tratamento de erro.
 
-### Para onde avançar a partir daqui:
-- 12 factor apps (CI/CD, testes, codcov, vercel)
+Por enquanto o projeto está finalizado, pois cumpriu o objetivo de ser uma leve introdução ao Node.js, express e typescript.
+No futuro, para aprofundar melhor alguns conceitos:
+- Começar melhorando a cobertura de testes sob as APIs existentes
+- Implementar um servidor de CI/CD, vercel talvez.
+- Alterar BD para postgres
+- Implementar novas APIs utilizando exclusivamente o processo de TDD
